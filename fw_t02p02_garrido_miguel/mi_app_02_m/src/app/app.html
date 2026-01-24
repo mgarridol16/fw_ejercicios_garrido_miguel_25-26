@@ -1,0 +1,31 @@
+<main class="main">
+  <div class="content">
+    <h1>Hello, {{ title() }}</h1>
+  </div>
+  <div>
+    <section>
+      <app-user></app-user>
+    </section>
+    <section>
+      <ul>
+        <li><app-user></app-user></li>
+        <li><app-user></app-user></li>
+        <li><app-user></app-user></li>
+      </ul>
+    </section>
+  </div>
+  <div>@if (isServerRunning){
+    <span>Yes, the server is running</span>
+    }
+    @else {
+    <span>No, the server is not running</span>
+    }
+  </div>
+  <div>
+    @for (character of characters; track character.id){
+    <p>{{ character.id }} - {{ character.name }}</p>
+    }
+
+  </div>
+  <router-outlet />
+</main>

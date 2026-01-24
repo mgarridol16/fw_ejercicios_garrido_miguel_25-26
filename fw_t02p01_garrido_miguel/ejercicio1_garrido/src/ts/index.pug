@@ -1,0 +1,240 @@
+extends layout
+
+block content
+  main.container.my-5
+    .zonaPublica
+      section.seccion-bienvenida.mb-5
+        h2.text-center.mb-4 Bienvenido a mi App de recetas
+
+        .row.mb-4
+          .col-md-6.mx-auto
+            .form-group
+              label.form-label(for="categoriasOrdenadas") Selecciona una categoría:
+              select.form-select(name="categoriasOrdenadas" id="categoriasOrdenadas")
+                option(value="todas" selected) Todas las categorías
+
+        .contenedor-8recetasCard
+          .row.g-4#recetasContainer
+
+      section.seccion-iniciarOregistrarSesion.my-5
+        .row.g-4
+          .col-md-6
+            .card.shadow-sm
+              .card-body
+                h2.card-title.text-center.mb-4 Regístrate como nuevo usuario
+                form#formRegistro
+                  .mb-3
+                    label.form-label(for="nombreUser") Nombre:
+                    input.form-control(type="text" id="nombreUser" name="nombreUser" required)
+
+                  .mb-3
+                    label.form-label(for="correoRegistro") Correo electrónico:
+                    input.form-control(type="email" id="correoRegistro" name="correoRegistro" required)
+
+                  .mb-3
+                    label.form-label(for="passwordRegistro") Contraseña:
+                    input.form-control(type="password" id="passwordRegistro" name="passwordRegistro" required minlength="4")
+                    .form-text Mínimo 4 caracteres
+
+                  .mb-3
+                    label.form-label(for="repassword") Confirmar contraseña:
+                    input.form-control(type="password" id="repassword" name="repassword" required minlength="4")
+
+                  .d-grid
+                    button.btn.btn-primary(type="submit" id="confirmarRegistro") Registrarse
+
+                  .alert.alert-dismissible.fade.mt-3(id="alertRegistro" role="alert" style="display:none")
+
+          .col-md-6
+            .card.shadow-sm
+              .card-body
+                h2.card-title.text-center.mb-4 Inicia Sesión
+                form#formLogin
+                  .mb-3
+                    label.form-label(for="correoLogin") Correo electrónico:
+                    input.form-control(type="email" id="correoLogin" name="correoLogin" required)
+
+                  .mb-3
+                    label.form-label(for="passwordLogin") Contraseña:
+                    input.form-control(type="password" id="passwordLogin" name="passwordLogin" required minlength="4")
+
+                  .mb-3
+                    label.form-label Mantener la sesión abierta:
+                    .form-check
+                      input.form-check-input(type="radio" name="mantenerSesion" id="sesionSi" value="si")
+                      label.form-check-label(for="sesionSi") Sí
+                    .form-check
+                      input.form-check-input(type="radio" name="mantenerSesion" id="sesionNo" value="no" checked)
+                      label.form-check-label(for="sesionNo") No
+
+                  .d-grid
+                    button.btn.btn-success(type="submit" id="btnIniciarSesion") Iniciar Sesión
+
+                  .alert.alert-dismissible.fade.mt-3(id="alertLogin" role="alert" style="display:none")
+
+    .zonaPrivada(style="display:none")
+      nav.navbar.navbar-light.bg-light.mb-4
+        .container-fluid
+          span.navbar-brand.mb-0.h5#nombreUsuarioLogueado
+          button.btn.btn-outline-danger(type="button" id="btnCerrarSesion") Cerrar Sesión
+
+      section.seccion-index-privada.mb-5
+        h2.text-center.mb-4 Bienvenido a mi App de recetas
+
+        .row.mb-4
+          .col-md-8.mx-auto
+            .card.shadow-sm
+              .card-body
+                .row.align-items-end
+                  .col-md-8
+                    label.form-label(for="categoriasOrdenadasPriv") Selecciona una categoría:
+                    select.form-select(name="categoriasOrdenadasPriv" id="categoriasOrdenadasPriv")
+                      option(value="todas" selected) Todas las categorías
+                  .col-md-4
+                    button.btn.btn-primary.w-100(type="button" id="guardarCatFav") Guardar como favorita
+
+        .contenedor-8recetasCard-privada
+          .row.g-4#recetasContainerPriv
+
+        section.seccion-ultimas4save.my-5
+          h3.text-center.mb-4 Mis últimas 4 recetas guardadas
+          .row.g-4#ultimas4RecetasContainer
+            .col-12
+              p.text-center.text-muted No tienes recetas guardadas todavía
+
+      section.seccion-detallesReceta.mb-5(style="display:none")
+        .card.shadow
+          .card-body
+            button.btn.btn-secondary.mb-3(type="button" id="volverIndex") ← Volver
+            #detalleRecetaContent
+
+      section.seccion-planSemanal.mb-5(style="display:none")
+        h2.text-center.mb-4 Plan Semanal
+
+        section.crearPlan.mb-5
+          .card.shadow
+            .card-header.bg-primary.text-white
+              h4.mb-0 Crear Plan Semanal
+            .card-body
+              form#formCrearPlan
+                .row.mb-3
+                  .col-md-6
+                    label.form-label(for="fechaPlan") Selecciona una semana:
+                    input.form-control(type="date" id="fechaPlan" name="fechaPlan" required)
+                  .col-md-6
+                    label.form-label Código del plan:
+                    input.form-control(type="text" id="codigoPlan" name="codigoPlan" readonly placeholder="YYYY-WXX")
+
+                .mb-3
+                  label.form-label(for="buscarIngrediente") Buscar recetas por ingrediente:
+                  .input-group
+                    input.form-control(type="text" id="buscarIngrediente" name="buscarIngrediente" placeholder="Ej: chicken")
+                    button.btn.btn-outline-secondary(type="button" id="btnBuscarRecetas") Buscar
+
+                .row.mb-3#resultadosBusqueda(style="display:none")
+                  .col-12
+                    h5 Resultados de búsqueda:
+                    .list-group#listaResultados
+
+                .table-responsive.mb-3
+                  table.table.table-bordered.table-hover
+                    thead.table-light
+                      tr
+                        th Día
+                        th Comida
+                        th Cena
+                    tbody
+                      tr
+                        td Lunes
+                        td
+                          select.form-select.receta-comida(data-dia="lunes")
+                            option(value="" selected) Seleccionar receta...
+                        td
+                          select.form-select.receta-cena(data-dia="lunes")
+                            option(value="" selected) Seleccionar receta...
+                      tr
+                        td Martes
+                        td
+                          select.form-select.receta-comida(data-dia="martes")
+                            option(value="" selected) Seleccionar receta...
+                        td
+                          select.form-select.receta-cena(data-dia="martes")
+                            option(value="" selected) Seleccionar receta...
+                      tr
+                        td Miércoles
+                        td
+                          select.form-select.receta-comida(data-dia="miercoles")
+                            option(value="" selected) Seleccionar receta...
+                        td
+                          select.form-select.receta-cena(data-dia="miercoles")
+                            option(value="" selected) Seleccionar receta...
+                      tr
+                        td Jueves
+                        td
+                          select.form-select.receta-comida(data-dia="jueves")
+                            option(value="" selected) Seleccionar receta...
+                        td
+                          select.form-select.receta-cena(data-dia="jueves")
+                            option(value="" selected) Seleccionar receta...
+                      tr
+                        td Viernes
+                        td
+                          select.form-select.receta-comida(data-dia="viernes")
+                            option(value="" selected) Seleccionar receta...
+                        td
+                          select.form-select.receta-cena(data-dia="viernes")
+                            option(value="" selected) Seleccionar receta...
+                      tr
+                        td Sábado
+                        td
+                          select.form-select.receta-comida(data-dia="sabado")
+                            option(value="" selected) Seleccionar receta...
+                        td
+                          select.form-select.receta-cena(data-dia="sabado")
+                            option(value="" selected) Seleccionar receta...
+                      tr
+                        td Domingo
+                        td
+                          select.form-select.receta-comida(data-dia="domingo")
+                            option(value="" selected) Seleccionar receta...
+                        td
+                          select.form-select.receta-cena(data-dia="domingo")
+                            option(value="" selected) Seleccionar receta...
+
+                .d-flex.gap-2
+                  button.btn.btn-success(type="submit" id="guardarPlan") Guardar Plan
+                  button.btn.btn-secondary(type="button" id="cancelarPlan") Cancelar
+
+                .alert.alert-dismissible.fade.mt-3(id="alertPlan" role="alert" style="display:none")
+
+        section.tabla-planesSemanales
+          .card.shadow
+            .card-header.bg-secondary.text-white
+              h4.mb-0 Mis Planes Semanales
+            .card-body
+              .table-responsive
+                table.table.table-striped.table-hover#tablaPlanes
+                  thead.table-dark
+                    tr
+                      th Plan (Semana)
+                      th Lunes Comida
+                      th Lunes Cena
+                      th Martes Comida
+                      th Martes Cena
+                      th Miércoles Comida
+                      th Miércoles Cena
+                      th Jueves Comida
+                      th Jueves Cena
+                      th Viernes Comida
+                      th Viernes Cena
+                      th Sábado Comida
+                      th Sábado Cena
+                      th Domingo Comida
+                      th Domingo Cena
+                      th Acciones
+                  tbody#tbodyPlanes
+                    tr
+                      td.text-center(colspan="16") No hay planes semanales creados
+
+
+

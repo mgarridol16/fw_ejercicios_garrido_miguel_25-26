@@ -1,0 +1,15 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Depurar Mis TypeScript en Chrome",
+      "type": "pwa-msedge",
+      "request": "launch",
+      "url": "http://127.0.0.1:5500/public/index.html",
+      "webRoot": "${workspaceFolder}",
+      "sourceMaps": true,
+      "disableNetworkCache": true,
+      "skipFiles": ["<node_internals>/**", "${workspaceFolder}/node_modules/**"]
+    }
+  ]
+}
