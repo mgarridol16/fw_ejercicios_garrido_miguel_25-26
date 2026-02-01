@@ -1,1 +1,1 @@
-{"version":3,"file":"AuthSession.js","sourceRoot":"","sources":["../../src/ts/AuthSession.ts"],"names":[],"mappings":";AAAA,OAAO,CAAC,GAAG,CAAC,oBAAoB,CAAC,CAAC"}
+{"version":3,"file":"AuthSession.js","sourceRoot":"","sources":["../../src/ts/AuthSession.ts"],"names":[],"mappings":"AAAA,OAAO,CAAC,GAAG,CAAC,oBAAoB,CAAC,CAAC;AAElC,MAAM,OAAO,WAAW;IAMtB,YACE,MAAc,EACd,IAAY,EACZ,SAAiB,EACjB,YAAqB;QAErB,IAAI,CAAC,MAAM,GAAG,MAAM,CAAC;QACrB,IAAI,CAAC,IAAI,GAAG,IAAI,CAAC;QACjB,IAAI,CAAC,SAAS,GAAG,SAAS,CAAC;QAC3B,IAAI,CAAC,YAAY,GAAG,YAAY,CAAC;IACnC,CAAC;CACF"}

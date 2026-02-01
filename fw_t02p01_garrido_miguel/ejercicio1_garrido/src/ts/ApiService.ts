@@ -2,7 +2,23 @@ import { MyMeal } from "./MyMeal.js";
 
 console.log("Clase ApiService");
 
-class ApiService {
+interface RecetaDeLaApi {
+  idMeal: string;
+  strMeal: string;
+  strCategory: string;
+  strArea: string;
+  strMealThumb: string;
+  strInstructions?: string;
+  strYoutube?: string;
+  [key: string]: string | undefined;
+}
+
+export interface Ingredient {
+  name: string;
+  measure: string;
+}
+
+export class ApiService {
   private readonly API_URL: string;
   private readonly API_KEY: string;
 
@@ -25,12 +41,14 @@ class ApiService {
 
     const listIngredientes: Ingredient[] = [];
     for (let i = 1; i <= 20; i++) {
-      const nombreIngrediente = plato[`strIngredient${i}`];
-      const medidaIngrediente = plato[`strMeasure${i}`];
+      const nombreIngrediente = plato[`strIngredient${i}`] as
+        | string
+        | undefined;
+      const medidaIngrediente = plato[`strMeasure${i}`] as string | undefined;
       if (nombreIngrediente && nombreIngrediente.trim() !== "") {
         listIngredientes.push({
           name: nombreIngrediente,
-          measure: medidaIngrediente,
+          measure: medidaIngrediente || "",
         });
       }
     }
@@ -91,12 +109,14 @@ class ApiService {
     const plato: RecetaDeLaApi = datos.meals[0];
     const listIngredientes: Ingredient[] = [];
     for (let i = 1; i <= 20; i++) {
-      const nombreIngrediente = plato[`strIngredient${i}`];
-      const medidaIngrediente = plato[`strMeasure${i}`];
+      const nombreIngrediente = plato[`strIngredient${i}`] as
+        | string
+        | undefined;
+      const medidaIngrediente = plato[`strMeasure${i}`] as string | undefined;
       if (nombreIngrediente && nombreIngrediente.trim() !== "") {
         listIngredientes.push({
           name: nombreIngrediente,
-          measure: medidaIngrediente,
+          measure: medidaIngrediente || "",
         });
       }
     }
@@ -130,12 +150,14 @@ class ApiService {
     const plato: RecetaDeLaApi = datos.meals[0];
     const listIngredientes: Ingredient[] = [];
     for (let i = 1; i <= 20; i++) {
-      const nombreIngrediente = plato[`strIngredient${i}`];
-      const medidaIngrediente = plato[`strMeasure${i}`];
+      const nombreIngrediente = plato[`strIngredient${i}`] as
+        | string
+        | undefined;
+      const medidaIngrediente = plato[`strMeasure${i}`] as string | undefined;
       if (nombreIngrediente && nombreIngrediente.trim() !== "") {
         listIngredientes.push({
           name: nombreIngrediente,
-          measure: medidaIngrediente,
+          measure: medidaIngrediente || "",
         });
       }
     }
@@ -178,5 +200,33 @@ class ApiService {
     }
     todasCategorias.sort((a, b) => a.localeCompare(b));
     return todasCategorias;
+  }
+
+  // RECETAS POR CATEGORÍA
+  async obtenerRecetasPorCategoria(categoria: string): Promise<MyMeal[]> {
+    const endpoint: string = `filter.php?c=${categoria}`;
+    const respuesta: Response = await fetch(`${this.API_URL}${endpoint}`);
+
+    if (!respuesta.ok) {
+      throw new Error(`Error en la petición: ${respuesta.status}`);
+    }
+
+    const datos = await respuesta.json();
+    if (!datos.meals) {
+      return [];
+    }
+
+    const listaRecetas: MyMeal[] = [];
+    // Cogemos las 8 primeras recetas que devuelve la API para esta categoría
+    const maxRecetas = 8;
+
+    for (let i = 0; i < maxRecetas && i < datos.meals.length; i++) {
+      const id = Number(datos.meals[i].idMeal);
+      // Usamos tu método existente para obtener los detalles (ingredientes, etc.)
+      const receta = await this.obtenerRecetaPorID(id);
+      listaRecetas.push(receta);
+    }
+
+    return listaRecetas;
   }
 }

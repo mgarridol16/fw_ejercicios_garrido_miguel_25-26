@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
+exports.ApiService = void 0;
 console.log("Clase ApiService");
 var ApiService = /** @class */ (function () {
     function ApiService() {
@@ -67,7 +68,7 @@ var ApiService = /** @class */ (function () {
                             if (nombreIngrediente && nombreIngrediente.trim() !== "") {
                                 listIngredientes.push({
                                     name: nombreIngrediente,
-                                    measure: medidaIngrediente
+                                    measure: medidaIngrediente || ""
                                 });
                             }
                         }
@@ -155,7 +156,7 @@ var ApiService = /** @class */ (function () {
                             if (nombreIngrediente && nombreIngrediente.trim() !== "") {
                                 listIngredientes.push({
                                     name: nombreIngrediente,
-                                    measure: medidaIngrediente
+                                    measure: medidaIngrediente || ""
                                 });
                             }
                         }
@@ -202,7 +203,7 @@ var ApiService = /** @class */ (function () {
                             if (nombreIngrediente && nombreIngrediente.trim() !== "") {
                                 listIngredientes.push({
                                     name: nombreIngrediente,
-                                    measure: medidaIngrediente
+                                    measure: medidaIngrediente || ""
                                 });
                             }
                         }
@@ -253,5 +254,46 @@ var ApiService = /** @class */ (function () {
             });
         });
     };
+    // RECETAS POR CATEGORÍA
+    ApiService.prototype.obtenerRecetasPorCategoria = function (categoria) {
+        return __awaiter(this, void 0, Promise, function () {
+            var endpoint, respuesta, datos, listaRecetas, maxRecetas, i, id, receta;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        endpoint = "filter.php?c=" + categoria;
+                        return [4 /*yield*/, fetch("" + this.API_URL + endpoint)];
+                    case 1:
+                        respuesta = _a.sent();
+                        if (!respuesta.ok) {
+                            throw new Error("Error en la petici\u00F3n: " + respuesta.status);
+                        }
+                        return [4 /*yield*/, respuesta.json()];
+                    case 2:
+                        datos = _a.sent();
+                        if (!datos.meals) {
+                            return [2 /*return*/, []];
+                        }
+                        listaRecetas = [];
+                        maxRecetas = 8;
+                        i = 0;
+                        _a.label = 3;
+                    case 3:
+                        if (!(i < maxRecetas && i < datos.meals.length)) return [3 /*break*/, 6];
+                        id = Number(datos.meals[i].idMeal);
+                        return [4 /*yield*/, this.obtenerRecetaPorID(id)];
+                    case 4:
+                        receta = _a.sent();
+                        listaRecetas.push(receta);
+                        _a.label = 5;
+                    case 5:
+                        i++;
+                        return [3 /*break*/, 3];
+                    case 6: return [2 /*return*/, listaRecetas];
+                }
+            });
+        });
+    };
     return ApiService;
 }());
+exports.ApiService = ApiService;

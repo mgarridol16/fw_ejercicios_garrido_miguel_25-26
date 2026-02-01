@@ -1,15 +1,15 @@
 console.log("Clase Auth Session");
 
-class AuthSession {
+export class AuthSession {
   private userId: number;
   private name: string;
-  private loginDate: Date;
+  private loginDate: string;
   private cerrarSesion: boolean;
 
   constructor(
     userId: number,
     name: string,
-    loginDate: Date,
+    loginDate: string,
     cerrarSesion: boolean,
   ) {
     this.userId = userId;

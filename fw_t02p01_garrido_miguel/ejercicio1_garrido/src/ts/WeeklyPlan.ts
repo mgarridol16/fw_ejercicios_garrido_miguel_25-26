@@ -1,6 +1,8 @@
+import { WeeklyPlanDay } from "./WeeklyPlanDay.js";
+
 console.log("Interfaz WeeklyPlan");
 
-interface WeeklyPlan {
+export interface WeeklyPlan {
   id: string;
   userId: number;
   days: WeeklyPlanDay[];

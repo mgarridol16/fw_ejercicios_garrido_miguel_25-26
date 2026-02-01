@@ -1,7 +1,7 @@
 console.log("interfaz WeeklyPlanDay");
 
-interface WeeklyPlanDay {
+export interface WeeklyPlanDay {
   day: string;
-  launchMealID: number;
-  dinnerMealID: number;
+  lunchMealID?: number;
+  dinnerMealID?: number;
 }

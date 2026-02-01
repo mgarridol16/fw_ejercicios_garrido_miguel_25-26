@@ -1,6 +1,6 @@
 console.log("MyMeal interface");
 
-interface Ingredient {
+export interface Ingredient {
   name: string;
   measure: string;
 }

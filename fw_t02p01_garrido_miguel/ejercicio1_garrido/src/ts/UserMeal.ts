@@ -1,14 +1,14 @@
 console.log("Interfaz UserMeal");
 
 enum Status {
-  QUIERO_HACERLA,
-  LA_HE_HECHO,
+  QUIERO_HACERLA = "QUIERO_HACERLA",
+  LA_HE_HECHO = "LA_HE_HECHO",
 }
 
-interface UserMeal {
+export interface UserMeal {
   userId: number;
-  mealID: number; //*id debe coincidir exactamente con el idMeal de la API
-  saveDate: Date;
+  idMeal: number; //*id debe coincidir exactamente con el idMeal de la API
+  saveDate: string;
   status: Status;
   notes?: string;
   rating?: number;
