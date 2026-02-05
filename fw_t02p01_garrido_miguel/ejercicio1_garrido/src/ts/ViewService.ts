@@ -7,7 +7,8 @@ export class ViewService {
   renderizarListado(
     contenedor: HTMLElement,
     recetas: MyMeal[],
-    estaLogueado: boolean
+    estaLogueado: boolean,
+    esZonaPrivada: boolean = false,
   ): void {
     contenedor.innerHTML = "";
 
@@ -23,24 +24,39 @@ export class ViewService {
 
     for (let i = 0; i < recetas.length; i++) {
       const r = recetas[i];
+      const textoBoton = esZonaPrivada ? "Quitar de favorita" : "Favorito";
 
       html += `
-            <div class="col">
-                <div class="card h-100 shadow-sm">
-                    <img src="${r.strMealThumb}" class="card-img-top" alt="${r.strMeal}">
-                    <div class="card-body">
-                        <h5 class="card-title">${r.strMeal}</h5>
-                        </div>
-                    <div class="card-footer bg-white border-top-0 d-grid gap-2">
-                        ${
-                          estaLogueado
-                            ? `<button class="btn btn-outline-primary btn-sm btn-ver-detalle" data-id="${r.idMeal}">Ver detalles</button>
-                               <button class="btn btn-outline-danger btn-sm btn-guardar-favorito" data-id="${r.idMeal}"> Favorito</button>`
-                            : `<p class="text-muted small text-center">Inicia sesión para ver detalles o guardar</p>`
-                        }
-                    </div>
-                </div>
-            </div>`;
+    <div class="col">
+        <div class="card h-100 shadow-sm">
+            <img src="${r.strMealThumb}" class="card-img-top" alt="${r.strMeal}">
+            <div class="card-body">
+                <h5 class="card-title">${r.strMeal}</h5>
+
+                <p class="card-text mb-1">
+                    <strong>${r.strCategory}</strong> | <small>${r.strArea}</small>
+                </p>
+                <span class="badge bg-secondary mb-2">
+                    ${r.ingredients ? r.ingredients.length : 0} Ingredientes
+                </span>
+            </div>
+
+            <div class="card-footer bg-white border-top-0 d-grid gap-2">
+                ${
+                  estaLogueado
+                    ? `<button class="btn btn-outline-primary btn-sm btn-ver-detalle" data-id="${r.idMeal}">
+                        Ver detalles
+                       </button>
+                       <button class="btn btn-outline-danger btn-sm btn-guardar-favorito" data-id="${r.idMeal}">
+                         ${textoBoton}
+                       </button>`
+                    : `<p>
+                         Inicia sesión para ver detalles
+                       </p>`
+                }
+            </div>
+        </div>
+    </div>`;
     }
 
     html += "</div>";
@@ -66,7 +82,7 @@ export class ViewService {
         "No se ha podido cargar la información de la receta.",
         "danger",
       );
-      return; // IMPORTANTE: cortamos la ejecución aquí
+      return;
     }
 
     let ingredientesHTML = '<ul class="list-group">';

@@ -35,6 +35,13 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __spreadArrays = (this && this.__spreadArrays) || function () {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+};
 exports.__esModule = true;
 debugger;
 console.log("Inicio de la App de comidas");
@@ -45,21 +52,52 @@ var StorageService_js_1 = require("./StorageService.js");
 var api = new ApiService_js_1.ApiService();
 var view = new ViewService_js_1.ViewService();
 var storage = new StorageService_js_1.StorageService();
-var selectCats = document.getElementById("categoriasOrdenadas");
-var recetasContainer = document.getElementById("recetasContainer");
-var linkBienvenida = document.getElementById("link-bienvenida");
-var zonaPublica = document.querySelector(".zonaPublica"); // el . por que es una clase
+// --- SELECTORES ---
+var selectCats = document.getElementById("categoriasPub");
+var selectCatsPriv = document.getElementById("categoriasPriv");
+var recetasContainer = document.getElementById("recetasContainerPub");
+var recetasContainerPriv = document.getElementById("recetasContainerPriv");
+var linkBienvenida = document.getElementById("btn-home-pub");
 var linkFavoritos = document.getElementById("link-favoritos");
-var seccionBienvenida = document.querySelector(".seccion-bienvenida");
-var seccionLogin = document.querySelector(".seccion-iniciarOregistrarSesion");
-// Elementos del formulario de Registro
+var linkLoginOregister = document.getElementById("btn-login-nav");
+var navUserInfo = document.getElementById("nav-user-info");
+var navLoginItem = document.getElementById("nav-login-item");
+var navLogoutItem = document.getElementById("nav-logout-item");
+var nombreUserLogNav = document.getElementById("nombreUserLog");
+var zonaPublica = document.getElementById("zonaPublica");
+var zonaPrivada = document.getElementById("zonaPrivada");
+var seccionBienvenida = document.getElementById("sec-bienvenida-pub");
+var seccionLogin = document.getElementById("sec-auth");
+var seccionFavoritosPriv = document.getElementById("sec-favoritos-priv");
+var seccionPlanSemanalPriv = document.getElementById("sec-plan-semanal-priv");
 var formRegistro = document.getElementById("formRegistro");
-var nombreUser = document.getElementById("nombreUser");
-var correoRegistro = document.getElementById("correoRegistro");
-var passRegistro = document.getElementById("passwordRegistro");
-var rePassRegistro = document.getElementById("repassword");
+var nombreUser = document.getElementById("regNombre");
+var correoRegistro = document.getElementById("regEmail");
+var passRegistro = document.getElementById("regPass");
 var alertRegistro = document.getElementById("alertRegistro");
-var linkLogout = document.getElementById("link-logout");
+var linkLogout = document.getElementById("btnLogout");
+function actualizarNav() {
+    var usuarioLogueado = storage.obtenerUsuarioLogueado();
+    if (usuarioLogueado) {
+        if (navLoginItem)
+            navLoginItem.classList.add("d-none");
+        if (navLogoutItem)
+            navLogoutItem.classList.remove("d-none");
+        if (navUserInfo)
+            navUserInfo.classList.remove("d-none");
+        if (nombreUserLogNav)
+            nombreUserLogNav.textContent = usuarioLogueado.name;
+    }
+    else {
+        if (navLoginItem)
+            navLoginItem.classList.remove("d-none");
+        if (navLogoutItem)
+            navLogoutItem.classList.add("d-none");
+        if (navUserInfo)
+            navUserInfo.classList.add("d-none");
+    }
+}
+var recetasActuales = [];
 //arranque de la app
 function init() {
     return __awaiter(this, void 0, void 0, function () {
@@ -74,28 +112,28 @@ function init() {
                     return [4 /*yield*/, cargarRecetas("todas")];
                 case 2:
                     _a.sent();
-                    // Activamos el selector
-                    selectCats.addEventListener("change", function () { return __awaiter(_this, void 0, void 0, function () {
-                        var seleccion;
-                        return __generator(this, function (_a) {
-                            switch (_a.label) {
-                                case 0:
-                                    seleccion = selectCats.value;
-                                    recetasContainer.innerHTML = "";
-                                    return [4 /*yield*/, cargarRecetas(seleccion)];
-                                case 1:
-                                    _a.sent();
-                                    return [2 /*return*/];
-                            }
-                        });
-                    }); });
-                    // ACTIVAMOS LA NAVEGACIÓN
+                    if (selectCats) {
+                        selectCats.addEventListener("change", function () { return __awaiter(_this, void 0, void 0, function () {
+                            var seleccion;
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0:
+                                        seleccion = selectCats.value;
+                                        return [4 /*yield*/, cargarRecetas(seleccion)];
+                                    case 1:
+                                        _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); });
+                    }
+                    configurarZonas();
                     configurarNavegacion();
                     configurarEventosFormularios();
                     configurarEventoLogin();
                     configurarEventosRecetas();
                     configurarEventoLogout();
-                    actualizarMenu();
+                    actualizarNav();
                     return [2 /*return*/];
             }
         });
@@ -109,20 +147,35 @@ function cargarCategorias() {
                 case 0: return [4 /*yield*/, api.obtenerCategoriasDisponibles()];
                 case 1:
                     categorias = _a.sent();
-                    //ordenamos alfabeticamente antes de mostrarlas en el select
                     categorias.sort(function (a, b) { return a.localeCompare(b); });
-                    categorias.forEach(function (cat) {
-                        var opcion = document.createElement("option");
-                        opcion.value = cat;
-                        opcion.textContent = cat;
-                        selectCats.appendChild(opcion);
-                    });
+                    if (selectCats) {
+                        categorias.forEach(function (cat) {
+                            var opcion = document.createElement("option");
+                            opcion.value = cat;
+                            opcion.textContent = cat;
+                            selectCats.appendChild(opcion);
+                        });
+                    }
                     return [2 /*return*/];
             }
         });
     });
 }
-// En app.ts
+function cargarCategoriasPrivadas() {
+    var categorias = Array.from((selectCats === null || selectCats === void 0 ? void 0 : selectCats.options) || []).map(function (opt) { return opt.value; });
+    categorias.sort(function (a, b) { return a.localeCompare(b); });
+    if (selectCatsPriv) {
+        selectCatsPriv.innerHTML = '<option value="todas">Todas</option>';
+        categorias.forEach(function (cat) {
+            if (cat !== "todas") {
+                var opcion = document.createElement("option");
+                opcion.value = cat;
+                opcion.textContent = cat;
+                selectCatsPriv.appendChild(opcion);
+            }
+        });
+    }
+}
 function cargarRecetas(cat) {
     return __awaiter(this, void 0, void 0, function () {
         var recetasFinales, i, receta, estaLogueado;
@@ -146,109 +199,151 @@ function cargarRecetas(cat) {
                 case 4: return [3 /*break*/, 7];
                 case 5: return [4 /*yield*/, api.obtenerRecetasPorCategoria(cat)];
                 case 6:
-                    // Ahora este método ya existe y no dará error
                     recetasFinales = _a.sent();
                     _a.label = 7;
                 case 7:
                     estaLogueado = storage.obtenerUsuarioLogueado() !== null;
+                    recetasActuales = recetasFinales;
                     view.renderizarListado(recetasContainer, recetasFinales, estaLogueado);
                     return [2 /*return*/];
             }
         });
     });
 }
-// Pista para el orquestador en app.ts
-// En app.ts (donde salga el error)
-function cargarFavoritos() {
+function cargarFavoritosPriv(cat) {
+    if (cat === void 0) { cat = "todas"; }
     var misFavoritos = storage.obtenerRecetasFavoritaUser();
-    // 1. Calculamos el estado (igual que hiciste en cargarRecetas)
-    var estaLogueado = true;
-    // 2. Pasamos los TRES argumentos
-    view.renderizarListado(recetasContainer, misFavoritos, estaLogueado);
+    if (cat !== "todas") {
+        misFavoritos = misFavoritos.filter(function (r) { return r.strCategory === cat; });
+    }
+    // Solo las 4 últimas
+    var ultimasCuatro = __spreadArrays(misFavoritos).reverse().slice(0, 4);
+    if (recetasContainerPriv) {
+        view.renderizarListado(recetasContainerPriv, ultimasCuatro, true, true);
+    }
+}
+function cargarFavoritos() {
+    cargarFavoritosPriv("todas");
+}
+function mostrarSeccion(seccionAMostrar) {
+    if (seccionBienvenida)
+        seccionBienvenida.classList.add("d-none");
+    if (seccionLogin)
+        seccionLogin.classList.add("d-none");
+    if (seccionAMostrar)
+        seccionAMostrar.classList.remove("d-none");
+}
+function mostrarSeccionPrivada(mostrarFavoritos) {
+    if (mostrarFavoritos === void 0) { mostrarFavoritos = true; }
+    if (mostrarFavoritos) {
+        if (seccionFavoritosPriv)
+            seccionFavoritosPriv.classList.remove("d-none");
+        if (seccionPlanSemanalPriv)
+            seccionPlanSemanalPriv.classList.add("d-none");
+    }
+    else {
+        if (seccionFavoritosPriv)
+            seccionFavoritosPriv.classList.add("d-none");
+        if (seccionPlanSemanalPriv)
+            seccionPlanSemanalPriv.classList.remove("d-none");
+    }
+}
+function configurarZonas() {
+    var usuarioLogueado = storage.obtenerUsuarioLogueado();
+    if (usuarioLogueado) {
+        if (zonaPublica)
+            zonaPublica.classList.add("d-none");
+        if (zonaPrivada)
+            zonaPrivada.classList.remove("d-none");
+        cargarFavoritos();
+        cargarCategoriasPrivadas();
+        mostrarSeccionPrivada(true);
+    }
+    else {
+        if (zonaPrivada)
+            zonaPrivada.classList.add("d-none");
+        if (zonaPublica)
+            zonaPublica.classList.remove("d-none");
+        mostrarSeccion(seccionBienvenida);
+    }
+    actualizarNav();
 }
 function configurarNavegacion() {
     var _this = this;
     if (linkBienvenida) {
-        linkBienvenida.addEventListener("click", function (e) { return __awaiter(_this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        // Añadimos async
-                        e.preventDefault();
-                        mostrarSeccion(seccionBienvenida);
-                        // REQUISITO: Volver a cargar las recetas generales
-                        console.log("Volviendo a la home...");
-                        return [4 /*yield*/, cargarRecetas("todas")];
-                    case 1:
-                        _a.sent();
-                        return [2 /*return*/];
-                }
-            });
-        }); });
+        linkBienvenida.addEventListener("click", function (e) {
+            e.preventDefault();
+            if (zonaPrivada && zonaPrivada.classList.contains("d-none") === false) {
+                // Estamos en zona privada, cambiar a pública
+                if (zonaPrivada)
+                    zonaPrivada.classList.add("d-none");
+                if (zonaPublica)
+                    zonaPublica.classList.remove("d-none");
+                cargarRecetas("todas");
+            }
+            mostrarSeccion(seccionBienvenida);
+        });
     }
     if (linkFavoritos) {
         linkFavoritos.addEventListener("click", function (e) {
             e.preventDefault();
             var usuarioLogueado = storage.obtenerUsuarioLogueado();
             if (usuarioLogueado) {
-                mostrarSeccion(seccionBienvenida); // Aseguramos que el contenedor sea visible
+                if (zonaPublica)
+                    zonaPublica.classList.add("d-none");
+                if (zonaPrivada)
+                    zonaPrivada.classList.remove("d-none");
                 cargarFavoritos();
+                cargarCategoriasPrivadas();
+                mostrarSeccionPrivada(true);
             }
             else {
                 mostrarSeccion(seccionLogin);
             }
         });
     }
-}
-function mostrarSeccion(seccionAMostrar) {
-    // Primero ocultamos todas las secciones principales
-    seccionBienvenida.classList.add("d-none");
-    seccionLogin.classList.add("d-none");
-    // Luego mostramos solo la que queremos
-    seccionAMostrar.classList.remove("d-none");
+    if (selectCatsPriv) {
+        selectCatsPriv.addEventListener("change", function () { return __awaiter(_this, void 0, void 0, function () {
+            var seleccion;
+            return __generator(this, function (_a) {
+                seleccion = selectCatsPriv.value;
+                cargarFavoritosPriv(seleccion);
+                return [2 /*return*/];
+            });
+        }); });
+    }
+    if (linkLoginOregister) {
+        linkLoginOregister.addEventListener("click", function (e) {
+            e.preventDefault();
+            mostrarSeccion(seccionLogin);
+        });
+    }
 }
 function configurarEventosFormularios() {
     if (formRegistro) {
         formRegistro.addEventListener("submit", function (e) {
             e.preventDefault();
-            // 1. Limpieza inicial (KISS)
             var nombre = Utilities_js_1.Utilities.limpiarTexto(nombreUser.value);
             var correo = Utilities_js_1.Utilities.limpiarTexto(correoRegistro.value);
             var pass = passRegistro.value;
-            var rePass = rePassRegistro.value;
-            // 2. Validación centralizada
             var errorFormato = Utilities_js_1.Utilities.validarFormulario(nombre, correo, pass);
             if (errorFormato !== "OK") {
-                view.mostrarAviso(alertRegistro, errorFormato, "danger");
-                // Mostramos el contenedor
-                alertRegistro.style.display = "block";
-                // Forzamos las clases de visibilidad de Bootstrap por si acaso
-                alertRegistro.classList.add("show", "fade");
-                // Hacemos scroll para que el usuario lo vea
-                alertRegistro.scrollIntoView({ behavior: "smooth", block: "center" });
+                if (alertRegistro) {
+                    view.mostrarAviso(alertRegistro, errorFormato, "danger");
+                    alertRegistro.style.display = "block";
+                }
                 return;
             }
-            // 3. Validaciones específicas del enunciado
-            if (pass !== rePass) {
-                view.mostrarAviso(alertRegistro, "La revalidación no coincide.", "danger");
-                alertRegistro.style.display = "block";
-                return;
-            }
-            if (pass.length < 4) {
-                view.mostrarAviso(alertRegistro, "Mínimo 4 caracteres requeridos.", "danger");
-                alertRegistro.style.display = "block";
-                return;
-            }
-            // 4. Ejecución del registro
             var exito = storage.registrarUsuario(nombre, correo, pass);
             if (!exito) {
-                view.mostrarAviso(alertRegistro, "El correo ya está registrado.", "danger");
+                if (alertRegistro)
+                    view.mostrarAviso(alertRegistro, "El correo ya está registrado.", "danger");
             }
             else {
-                view.mostrarAviso(alertRegistro, "¡Usuario creado! Ya puedes loguearte.", "success");
+                if (alertRegistro)
+                    view.mostrarAviso(alertRegistro, "¡Usuario creado! Ya puedes loguearte.", "success");
                 formRegistro.reset();
             }
-            alertRegistro.style.display = "block";
         });
     }
 }
@@ -258,51 +353,70 @@ function configurarEventoLogin() {
     if (formLogin) {
         formLogin.addEventListener("submit", function (e) {
             e.preventDefault();
-            var correo = document.getElementById("correoLogin").value;
-            var pass = document.getElementById("passwordLogin").value;
+            var correo = document.getElementById("logEmail")
+                .value;
+            var pass = document.getElementById("logPass")
+                .value;
             var loginCorrecto = storage.loguearUsuario(correo, pass);
             if (loginCorrecto) {
                 var user = storage.obtenerUsuarioLogueado();
-                view.mostrarAviso(alertLogin, "\u00A1Bienvenido, " + (user === null || user === void 0 ? void 0 : user.name) + "! Redirigiendo...", "success");
-                // 1. Forzamos visibilidad
-                alertLogin.style.display = "block";
-                // 2. Aseguramos que no tenga clases que lo oculten
-                alertLogin.classList.add("show");
+                if (alertLogin)
+                    view.mostrarAviso(alertLogin, "\u00A1Bienvenido, " + (user === null || user === void 0 ? void 0 : user.name) + "!", "success");
                 setTimeout(function () {
-                    actualizarMenu();
-                    mostrarSeccion(seccionBienvenida);
-                }, 1500);
+                    configurarZonas();
+                }, 1000);
             }
             else {
-                view.mostrarAviso(alertLogin, "Correo o contraseña incorrectos.", "danger");
-                alertLogin.style.display = "block";
-                alertLogin.classList.add("show");
+                if (alertLogin)
+                    view.mostrarAviso(alertLogin, "Error de acceso.", "danger");
             }
         });
     }
 }
 function configurarEventosRecetas() {
     var _this = this;
+    // Eventos para el contenedor PÚBLICO
     if (recetasContainer) {
         recetasContainer.addEventListener("click", function (e) { return __awaiter(_this, void 0, void 0, function () {
-            var target, idMeal, usuarioLogueado;
+            var target, idMeal_1, usuarioLogueado, recetaAGuardar, exito;
             return __generator(this, function (_a) {
                 target = e.target;
-                // 1. Detectamos si el clic fue en el botón de Favoritos
                 if (target.classList.contains("btn-guardar-favorito")) {
-                    idMeal = target.getAttribute("data-id");
+                    idMeal_1 = target.getAttribute("data-id");
                     usuarioLogueado = storage.obtenerUsuarioLogueado();
-                    // 2. Control de acceso: Solo si está logueado (Regla del enunciado)
                     if (!usuarioLogueado) {
-                        alert("Debes iniciar sesión para guardar favoritos.");
+                        alert("Inicia sesión para guardar favoritos.");
                         mostrarSeccion(seccionLogin);
                         return [2 /*return*/];
                     }
-                    if (idMeal) {
-                        console.log("Intentando guardar receta ID:", idMeal);
-                        // Aquí llamarás a tu método de storage para guardar
-                        // storage.guardarRecetaFav(idMeal);
+                    if (idMeal_1) {
+                        recetaAGuardar = recetasActuales.find(function (r) { return r.idMeal === Number(idMeal_1); });
+                        if (recetaAGuardar) {
+                            exito = storage.guardarRecetaFav(recetaAGuardar);
+                            if (exito) {
+                                target.textContent = "Guardada";
+                                target.classList.replace("btn-outline-danger", "btn-success");
+                            }
+                            else {
+                                alert("Ya está en favoritos.");
+                            }
+                        }
                     }
+                }
+                return [2 /*return*/];
+            });
+        }); });
+    }
+    // Eventos para el contenedor PRIVADO
+    if (recetasContainerPriv) {
+        recetasContainerPriv.addEventListener("click", function (e) { return __awaiter(_this, void 0, void 0, function () {
+            var target, idMeal;
+            return __generator(this, function (_a) {
+                target = e.target;
+                if (target.classList.contains("btn-guardar-favorito")) {
+                    idMeal = target.getAttribute("data-id");
+                    // Aquí podrías añadir la lógica de QUITAR favorito si quieres
+                    console.log("Clic en favorito de zona privada ID:", idMeal);
                 }
                 return [2 /*return*/];
             });
@@ -310,31 +424,13 @@ function configurarEventosRecetas() {
     }
 }
 function configurarEventoLogout() {
-    var linkLogout = document.getElementById("link-logout");
     if (linkLogout) {
         linkLogout.addEventListener("click", function (e) {
             e.preventDefault();
-            console.log("Cerrando sesión...");
             storage.cerrarSession();
-            actualizarMenu(); // <-- Añadir aquí
-            mostrarSeccion(seccionBienvenida);
+            configurarZonas();
             cargarRecetas("todas");
         });
-    }
-}
-function actualizarMenu() {
-    var usuarioLogueado = storage.obtenerUsuarioLogueado();
-    var linkLogout = document.getElementById("link-logout");
-    var linkFavoritos = document.getElementById("link-favoritos");
-    if (usuarioLogueado) {
-        // Si hay usuario: mostramos Logout y Favoritos (si estuviera oculto)
-        linkLogout === null || linkLogout === void 0 ? void 0 : linkLogout.classList.remove("d-none");
-        console.log("Menú actualizado: Usuario dentro");
-    }
-    else {
-        // Si no hay usuario: ocultamos Logout
-        linkLogout === null || linkLogout === void 0 ? void 0 : linkLogout.classList.add("d-none");
-        console.log("Menú actualizado: Modo público");
     }
 }
 init();

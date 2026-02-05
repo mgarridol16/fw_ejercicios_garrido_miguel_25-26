@@ -5,7 +5,8 @@ console.log("====ViewService====");
 var ViewService = /** @class */ (function () {
     function ViewService() {
     }
-    ViewService.prototype.renderizarListado = function (contenedor, recetas, estaLogueado) {
+    ViewService.prototype.renderizarListado = function (contenedor, recetas, estaLogueado, esZonaPrivada) {
+        if (esZonaPrivada === void 0) { esZonaPrivada = false; }
         contenedor.innerHTML = "";
         if (recetas.length === 0) {
             this.mostrarAviso(contenedor, "No hay recetas disponibles para mostrarlas.", "info");
@@ -14,9 +15,10 @@ var ViewService = /** @class */ (function () {
         var html = '<div class="row row-cols-1 row-cols-md-4 g-4">'; //4 columnas por fila en ORDENADOR
         for (var i = 0; i < recetas.length; i++) {
             var r = recetas[i];
-            html += "\n            <div class=\"col\">\n                <div class=\"card h-100 shadow-sm\">\n                    <img src=\"" + r.strMealThumb + "\" class=\"card-img-top\" alt=\"" + r.strMeal + "\">\n                    <div class=\"card-body\">\n                        <h5 class=\"card-title\">" + r.strMeal + "</h5>\n                        </div>\n                    <div class=\"card-footer bg-white border-top-0 d-grid gap-2\">\n                        " + (estaLogueado
-                ? "<button class=\"btn btn-outline-primary btn-sm btn-ver-detalle\" data-id=\"" + r.idMeal + "\">Ver detalles</button>\n                               <button class=\"btn btn-outline-danger btn-sm btn-guardar-favorito\" data-id=\"" + r.idMeal + "\"> Favorito</button>"
-                : "<p class=\"text-muted small text-center\">Inicia sesi\u00F3n para ver detalles o guardar</p>") + "\n                    </div>\n                </div>\n            </div>";
+            var textoBoton = esZonaPrivada ? "Quitar de favorita" : "Favorito";
+            html += "\n    <div class=\"col\">\n        <div class=\"card h-100 shadow-sm\">\n            <img src=\"" + r.strMealThumb + "\" class=\"card-img-top\" alt=\"" + r.strMeal + "\">\n            <div class=\"card-body\">\n                <h5 class=\"card-title\">" + r.strMeal + "</h5>\n\n                <p class=\"card-text mb-1\">\n                    <strong>" + r.strCategory + "</strong> | <small>" + r.strArea + "</small>\n                </p>\n                <span class=\"badge bg-secondary mb-2\">\n                    " + (r.ingredients ? r.ingredients.length : 0) + " Ingredientes\n                </span>\n            </div>\n\n            <div class=\"card-footer bg-white border-top-0 d-grid gap-2\">\n                " + (estaLogueado
+                ? "<button class=\"btn btn-outline-primary btn-sm btn-ver-detalle\" data-id=\"" + r.idMeal + "\">\n                        Ver detalles\n                       </button>\n                       <button class=\"btn btn-outline-danger btn-sm btn-guardar-favorito\" data-id=\"" + r.idMeal + "\">\n                         " + textoBoton + "\n                       </button>"
+                : "<p>\n                         Inicia sesi\u00F3n para ver detalles\n                       </p>") + "\n            </div>\n        </div>\n    </div>";
         }
         html += "</div>";
         contenedor.innerHTML = html;
@@ -31,7 +33,7 @@ var ViewService = /** @class */ (function () {
         // Si por algún motivo la receta no llega o es nula
         if (!receta) {
             this.mostrarAviso(contenedor, "No se ha podido cargar la información de la receta.", "danger");
-            return; // IMPORTANTE: cortamos la ejecución aquí
+            return;
         }
         var ingredientesHTML = '<ul class="list-group">';
         for (var i = 0; i < receta.ingredients.length; i++) {

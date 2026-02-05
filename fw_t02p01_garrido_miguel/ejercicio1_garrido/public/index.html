@@ -1,375 +1,156 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DWEC - Ejercicios T02p01 - Miguel Garrido</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
-  <link rel="stylesheet" href="css/micss.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body>
   <header class="bg-dark text-white py-3 mb-4">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark container"><a class="navbar-brand" href="#">Comidas Api</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample05"
-        aria-controls="navbarsExample05" aria-expanded="false" aria-label="Toggle navigation"><span
-          class="navbar-toggler-icon"></span></button>
-      <div class="collapse navbar-collapse" id="navbarsExample05">
+    <nav class="navbar navbar-expand-lg navbar-dark container">
+      <a class="navbar-brand" href="#">Comidas API</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navPrincipal">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navPrincipal">
         <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link" href="#" id="link-bienvenida">Bienvenida</a></li>
+          <li class="nav-item"><a class="nav-link" href="#" id="btn-home-pub">Bienvenida</a></li>
           <li class="nav-item"><a class="nav-link" href="#" id="link-favoritos">Favoritos</a></li>
-          <li class="nav-item">
-            <a class="nav-link d-none" id="link-logout" href="#">Cerrar Sesión</a>
+          <li class="nav-item d-none" id="nav-user-info">
+            <span class="nav-link" id="nombreUserLog"></span>
+          </li>
+          <li class="nav-item" id="nav-login-item">
+            <a class="nav-link" href="#" id="btn-login-nav">Loguearse o Registrarse</a>
+          </li>
+          <li class="nav-item d-none" id="nav-logout-item">
+            <a class="nav-link" href="#" id="btnLogout">Cerrar Sesión</a>
           </li>
         </ul>
       </div>
     </nav>
   </header>
-  <main class="container my-5">
-    <div class="zonaPublica">
-      <section class="seccion-bienvenida mb-5">
+
+  <div id="zonaPublica" class="zona-visualizacion">
+
+    <main class="container my-5">
+      <section id="sec-bienvenida-pub" class="mb-5">
         <h2 class="text-center mb-4">Bienvenido a mi App de recetas</h2>
         <div class="row mb-4">
           <div class="col-md-6 mx-auto">
-            <div class="form-group">
-              <label class="form-label" for="categoriasOrdenadas">Selecciona una categoría:</label>
-              <select class="form-select" name="categoriasOrdenadas" id="categoriasOrdenadas">
-                <option value="todas" selected>Todas las categorías</option>
+            <label class="form-label" for="categoriasPub">Selecciona una categoría:</label>
+            <select class="form-select" id="categoriasPub">
+              <option value="todas" selected>Todas las categorías</option>
+            </select>
+          </div>
+        </div>
+        <div class="row g-4" id="recetasContainerPub"></div>
+      </section>
+
+      <section id="sec-auth" class="my-5 d-none">
+        <div class="row g-4">
+          <div class="col-md-6">
+            <div class="card shadow-sm">
+              <div id="alertRegistro" class="alert d-none"></div>
+              <div class="card-body">
+                <h2 class="card-title text-center mb-4">Regístrate</h2>
+                <form id="formRegistro">
+                  <div class="mb-3">
+                    <label class="form-label" for="regNombre">Nombre:</label>
+                    <input class="form-control" type="text" id="regNombre" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label" for="regEmail">Correo:</label>
+                    <input class="form-control" type="email" id="regEmail" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label" for="regPass">Contraseña:</label>
+                    <input class="form-control" type="password" id="regPass" minlength="4" required>
+                  </div>
+                  <div class="d-grid">
+                    <button class="btn btn-primary" type="submit">Registrarse</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="card shadow-sm">
+              <div id="alertLogin" class="alert d-none"></div>
+              <div class="card-body">
+                <h2 class="card-title text-center mb-4">Inicia Sesión</h2>
+                <form id="formLogin">
+                  <div class="mb-3">
+                    <label class="form-label" for="logEmail">Correo:</label>
+                    <input class="form-control" type="email" id="logEmail" required>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label" for="logPass">Contraseña:</label>
+                    <input class="form-control" type="password" id="logPass" required>
+                  </div>
+                  <div class="mb-3">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" id="mantenerSesion">
+                      <label class="form-check-label" for="mantenerSesion">Mantener sesión abierta</label>
+                    </div>
+                  </div>
+                  <div class="d-grid">
+                    <button class="btn btn-success" type="submit">Entrar</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div id="zonaPrivada" class="zona-visualizacion d-none">
+    <main class="container">
+      <section class="mb-5" id="sec-favoritos-priv">
+        <div class="card shadow-sm p-4 mb-4">
+          <div class="row align-items-end">
+            <div class="col-md-8">
+              <label class="form-label" for="categoriasPriv">Categoría favorita:</label>
+              <select class="form-select" id="categoriasPriv">
+                <option value="todas">Todas</option>
               </select>
             </div>
           </div>
         </div>
 
-        <div class="contenedor-8recetasCard" id="contenedor-8recetasCard">
-          <div class="row g-4" id="recetasContainer"></div>
-        </div>
+        <h3>Mis Recetas</h3>
+        <div class="row g-4" id="recetasContainerPriv"></div>
       </section>
 
-      <section class="seccion-iniciarOregistrarSesion my-5 d-none">
-        <div class="row g-4">
-          <div class="col-md-6">
-            <div class="card shadow-sm">
-              <div class="card-body">
-                <h2 class="card-title text-center mb-4">Regístrate como nuevo usuario</h2>
-                <form id="formRegistro">
-                  <div class="mb-3">
-                    <label class="form-label" for="nombreUser">Nombre:</label>
-                    <input class="form-control" type="text" id="nombreUser" name="nombreUser" required>
-                  </div>
-                  <div class="mb-3">
-                    <label class="form-label" for="correoRegistro">Correo electrónico:</label>
-                    <input class="form-control" type="email" id="correoRegistro" name="correoRegistro" required>
-                  </div>
-                  <div class="mb-3">
-                    <label class="form-label" for="passwordRegistro">Contraseña:</label>
-                    <input class="form-control" type="password" id="passwordRegistro" name="passwordRegistro" required
-                      minlength="4">
-                    <div class="form-text">Mínimo 4 caracteres</div>
-                  </div>
-                  <div class="mb-3">
-                    <label class="form-label" for="repassword">Confirmar contraseña:</label>
-                    <input class="form-control" type="password" id="repassword" name="repassword" required
-                      minlength="4">
-                  </div>
-                  <div class="d-grid">
-                    <button class="btn btn-primary" type="submit" id="confirmarRegistro">Registrarse</button>
-                  </div>
-                  <div id="alertRegistro" class="mt-3" style="display: none;"></div>
-              </div>
-              </form>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="card shadow-sm">
-            <div class="card-body">
-              <h2 class="card-title text-center mb-4">Inicia Sesión</h2>
-              <form id="formLogin">
-                <div class="mb-3">
-                  <label class="form-label" for="correoLogin">Correo electrónico:</label>
-                  <input class="form-control" type="email" id="correoLogin" name="correoLogin" required>
-                </div>
-                <div class="mb-3">
-                  <label class="form-label" for="passwordLogin">Contraseña:</label>
-                  <input class="form-control" type="password" id="passwordLogin" name="passwordLogin" required
-                    minlength="4">
-                </div>
-                <div class="mb-3">
-                  <label class="form-label">Mantener la sesión abierta:</label>
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="mantenerSesion" id="sesionSi" value="si">
-                    <label class="form-check-label" for="sesionSi">Sí</label>
-                  </div>
-                  <div class="form-check">
-                    <input class="form-check-input" type="radio" name="mantenerSesion" id="sesionNo" value="no" checked>
-                    <label class="form-check-label" for="sesionNo">No</label>
-                  </div>
-                </div>
-                <div class="d-grid">
-                  <button class="btn btn-success" type="submit" id="btnIniciarSesion">Iniciar Sesión</button>
-                </div>
-                <div id="alertLogin" class="mt-3" style="display: none;"></div>
-            </div>
-            </form>
-          </div>
-        </div>
-    </div>
-    </div>
-    </section>
-    </div>
-
-
-    <div class="zonaPrivada" style="display:none">
-      <nav class="navbar navbar-light bg-light mb-4">
-        <div class="container-fluid"><span class="navbar-brand mb-0 h5" id="nombreUsuarioLogueado"></span>
-          <button class="btn btn-outline-danger" type="button" id="btnCerrarSesion">Cerrar Sesión</button>
-        </div>
-      </nav>
-      <section class="seccion-index-privada mb-5">
-        <h2 class="text-center mb-4">Bienvenido a mi App de recetas</h2>
-        <div class="row mb-4">
-          <div class="col-md-8 mx-auto">
-            <div class="card shadow-sm">
-              <div class="card-body">
-                <div class="row align-items-end">
-                  <div class="col-md-8">
-                    <label class="form-label" for="categoriasOrdenadasPriv">Selecciona una categoría:</label>
-                    <select class="form-select" name="categoriasOrdenadasPriv" id="categoriasOrdenadasPriv">
-                      <option value="todas" selected>Todas las categorías</option>
-                    </select>
-                  </div>
-                  <div class="col-md-4">
-                    <button class="btn btn-primary w-100" type="button" id="guardarCatFav">Guardar como
-                      favorita</button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="contenedor-8recetasCard-privada">
-          <div class="row g-4" id="recetasContainerPriv"></div>
-        </div>
-
-        <section class="seccion-ultimas4save my-5">
-          <h3 class="text-center mb-4">Mis últimas 4 recetas guardadas</h3>
-          <div class="row g-4" id="ultimas4RecetasContainer">
-            <div class="col-12">
-              <p class="text-center text-muted">No tienes recetas guardadas todavía</p>
-            </div>
-          </div>
-        </section>
-      </section>
-
-      <section class="seccion-detallesReceta mb-5" style="display:none">
-        <div class="card shadow">
-          <div class="card-body">
-            <button class="btn btn-secondary mb-3" type="button" id="volverIndex">← Volver</button>
-            <div id="detalleRecetaContent"></div>
-          </div>
+      <section class="mt-5 d-none" id="sec-plan-semanal-priv">
+        <h4>Mi Plan Semanal</h4>
+        <div class="table-responsive">
+          <table class="table table-bordered align-middle">
+            <thead class="table-dark">
+              <tr>
+                <th>Día</th>
+                <th>Comida</th>
+                <th>Cena</th>
+              </tr>
+            </thead>
+            <tbody id="tbodyPlanes">
+            </tbody>
+          </table>
         </div>
       </section>
+    </main>
+  </div>
 
-      <section class="seccion-planSemanal mb-5" style="display:none">
-        <h2 class="text-center mb-4">Plan Semanal</h2>
-        <section class="crearPlan mb-5">
-          <div class="card shadow">
-            <div class="card-header bg-primary text-white">
-              <h4 class="mb-0">Crear Plan Semanal</h4>
-            </div>
-            <div class="card-body">
-              <form id="formCrearPlan">
-                <div class="row mb-3">
-                  <div class="col-md-6">
-                    <label class="form-label" for="fechaPlan">Selecciona una semana:</label>
-                    <input class="form-control" type="date" id="fechaPlan" name="fechaPlan" required>
-                  </div>
-                  <div class="col-md-6">
-                    <label class="form-label">Código del plan:</label>
-                    <input class="form-control" type="text" id="codigoPlan" name="codigoPlan" readonly
-                      placeholder="YYYY-WXX">
-                  </div>
-                </div>
-                <div class="mb-3">
-                  <label class="form-label" for="buscarIngrediente">Buscar recetas por ingrediente:</label>
-                  <div class="input-group">
-                    <input class="form-control" type="text" id="buscarIngrediente" name="buscarIngrediente"
-                      placeholder="Ej: chicken">
-                    <button class="btn btn-outline-secondary" type="button" id="btnBuscarRecetas">Buscar</button>
-                  </div>
-                </div>
-                <div class="row mb-3" id="resultadosBusqueda" style="display:none">
-                  <div class="col-12">
-                    <h5>Resultados de búsqueda:</h5>
-                    <div class="list-group" id="listaResultados"></div>
-                  </div>
-                </div>
-                <div class="table-responsive mb-3">
-                  <table class="table table-bordered table-hover">
-                    <thead class="table-light">
-                      <tr>
-                        <th>Día</th>
-                        <th>Comida</th>
-                        <th>Cena</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Lunes</td>
-                        <td>
-                          <select class="form-select receta-comida" data-dia="lunes">
-                            <option value="" selected>Seleccionar receta...</option>
-                          </select>
-                        </td>
-                        <td>
-                          <select class="form-select receta-cena" data-dia="lunes">
-                            <option value="" selected>Seleccionar receta...</option>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Martes</td>
-                        <td>
-                          <select class="form-select receta-comida" data-dia="martes">
-                            <option value="" selected>Seleccionar receta...</option>
-                          </select>
-                        </td>
-                        <td>
-                          <select class="form-select receta-cena" data-dia="martes">
-                            <option value="" selected>Seleccionar receta...</option>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Miércoles</td>
-                        <td>
-                          <select class="form-select receta-comida" data-dia="miercoles">
-                            <option value="" selected>Seleccionar receta...</option>
-                          </select>
-                        </td>
-                        <td>
-                          <select class="form-select receta-cena" data-dia="miercoles">
-                            <option value="" selected>Seleccionar receta...</option>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Jueves</td>
-                        <td>
-                          <select class="form-select receta-comida" data-dia="jueves">
-                            <option value="" selected>Seleccionar receta...</option>
-                          </select>
-                        </td>
-                        <td>
-                          <select class="form-select receta-cena" data-dia="jueves">
-                            <option value="" selected>Seleccionar receta...</option>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Viernes</td>
-                        <td>
-                          <select class="form-select receta-comida" data-dia="viernes">
-                            <option value="" selected>Seleccionar receta...</option>
-                          </select>
-                        </td>
-                        <td>
-                          <select class="form-select receta-cena" data-dia="viernes">
-                            <option value="" selected>Seleccionar receta...</option>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Sábado</td>
-                        <td>
-                          <select class="form-select receta-comida" data-dia="sabado">
-                            <option value="" selected>Seleccionar receta...</option>
-                          </select>
-                        </td>
-                        <td>
-                          <select class="form-select receta-cena" data-dia="sabado">
-                            <option value="" selected>Seleccionar receta...</option>
-                          </select>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Domingo</td>
-                        <td>
-                          <select class="form-select receta-comida" data-dia="domingo">
-                            <option value="" selected>Seleccionar receta...</option>
-                          </select>
-                        </td>
-                        <td>
-                          <select class="form-select receta-cena" data-dia="domingo">
-                            <option value="" selected>Seleccionar receta...</option>
-                          </select>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <div class="d-flex gap-2">
-                  <button class="btn btn-success" type="submit" id="guardarPlan">Guardar Plan</button>
-                  <button class="btn btn-secondary" type="button" id="cancelarPlan">Cancelar</button>
-                </div>
-                <div class="alert alert-dismissible fade mt-3" id="alertPlan" role="alert" style="display:none"></div>
-              </form>
-            </div>
-          </div>
-        </section>
-
-        <section class="tabla-planesSemanales">
-          <div class="card shadow">
-            <div class="card-header bg-secondary text-white">
-              <h4 class="mb-0">Mis Planes Semanales</h4>
-            </div>
-            <div class="card-body">
-              <div class="table-responsive">
-                <table class="table table-striped table-hover" id="tablaPlanes">
-                  <thead class="table-dark">
-                    <tr>
-                      <th>Plan (Semana)</th>
-                      <th>Lunes Comida</th>
-                      <th>Lunes Cena</th>
-                      <th>Martes Comida</th>
-                      <th>Martes Cena</th>
-                      <th>Miércoles Comida</th>
-                      <th>Miércoles Cena</th>
-                      <th>Jueves Comida</th>
-                      <th>Jueves Cena</th>
-                      <th>Viernes Comida</th>
-                      <th>Viernes Cena</th>
-                      <th>Sábado Comida</th>
-                      <th>Sábado Cena</th>
-                      <th>Domingo Comida</th>
-                      <th>Domingo Cena</th>
-                      <th>Acciones</th>
-                    </tr>
-                  </thead>
-                  <tbody id="tbodyPlanes">
-                    <tr>
-                      <td class="text-center" colspan="16">No hay planes semanales creados</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </section>
-      </section>
-    </div>
-  </main>
-  <footer class="bg-secondary text-white py-3 mt-4">
-    <div class="container text-center">
-      <small>DAW | IES Gregorio Prieto</small>
-    </div>
+  <footer class="bg-secondary text-white py-3 mt-4 text-center">
+    <small>DAW | IES Gregorio Prieto | 2026</small>
   </footer>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
-    crossorigin="anonymous"></script>
-  <script type="module" src="/public/dist/app.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="./dist/app.js"></script>
 </body>
 
 </html>
